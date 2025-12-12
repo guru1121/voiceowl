@@ -120,7 +120,7 @@ export class TranscriptionController {
     }
   };
 
- // GET /transcriptions (30 days)
+ // GET /transcriptions 30 days
   
   public getTranscriptions = async (req: Request, res: Response): Promise<void> => {
     try {

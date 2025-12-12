@@ -27,7 +27,7 @@ export class TranscriptionServiceImpl implements TranscriptionService {
         this.speechConfig = null;
       }
     } else {
-      console.log('ℹ️  Azure Speech Service not configured - using mock transcription');
+      console.log(' Azure Speech Service not configured - using mock transcription');
     }
   }
 
@@ -107,7 +107,7 @@ export class TranscriptionServiceImpl implements TranscriptionService {
     }
   }
 
-//  
+
   private createAudioConfigFromBuffer(buffer: Buffer): sdk.AudioConfig {
    
     const stream = sdk.AudioInputStream.createPushStream();

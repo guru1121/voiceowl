@@ -4,6 +4,43 @@ import { connectDatabase, clearDatabase, closeDatabase } from '../test-setup';
 import transcriptionRoutes from '../../src/routes/transcription';
 import { errorHandler, notFoundHandler } from '../../src/middleware/errorHandler';
 
+// Mock Azure Speech SDK to prevent real Azure calls in tests
+jest.mock('microsoft-cognitiveservices-speech-sdk', () => ({
+  SpeechConfig: {
+    fromSubscription: jest.fn().mockReturnValue({
+      speechRecognitionLanguage: 'en-US'
+    })
+  },
+  SpeechRecognizer: jest.fn().mockImplementation(() => ({
+    recognized: null,
+    sessionStopped: null,
+    canceled: null,
+    startContinuousRecognitionAsync: jest.fn((successCb) => {
+      // Simulate immediate success
+      setTimeout(successCb, 10);
+    }),
+    stopContinuousRecognitionAsync: jest.fn(),
+    close: jest.fn()
+  })),
+  AudioConfig: {
+    fromStreamInput: jest.fn().mockReturnValue({
+      close: jest.fn()
+    })
+  },
+  AudioInputStream: {
+    createPushStream: jest.fn().mockReturnValue({
+      write: jest.fn(),
+      close: jest.fn()
+    })
+  },
+  ResultReason: {
+    RecognizedSpeech: 1
+  },
+  CancellationReason: {
+    Error: 1
+  }
+}));
+
 const app = express();
 
 // Setup test app
@@ -17,7 +54,13 @@ describe('Transcription API Integration Tests', () => {
     await connectDatabase();
   }, 35000); // 35 second timeout
 
+  beforeEach(async () => {
+    // Ensure clean state before each test
+    await clearDatabase();
+  });
+
   afterEach(async () => {
+    // Clean up after each test
     await clearDatabase();
   });
 
@@ -121,7 +164,7 @@ describe('Transcription API Integration Tests', () => {
         id: expect.any(String),
         message: expect.stringContaining('Transcription completed successfully')
       });
-    }, 30000);
+    }, 10000);
 
     test('should use default language when not specified', async () => {
       const validRequest = {
@@ -136,7 +179,7 @@ describe('Transcription API Integration Tests', () => {
       expect(response.body).toMatchObject({
         id: expect.any(String)
       });
-    }, 30000);
+    }, 10000);
 
     test('should validate language format', async () => {
       const invalidRequest = {

@@ -37,14 +37,15 @@ const transcriptionSchema = new Schema<ITranscription>({
     default: 'en-US'
   }
 }, {
-  timestamps: true, // Automatically adds createdAt and updatedAt
+  timestamps: true, 
   collection: 'transcriptions'
 });
 
-// Indexes for better query performance
-transcriptionSchema.index({ createdAt: -1 }); // For date-based queries
-transcriptionSchema.index({ audioUrl: 1 }); // For duplicate checking
-transcriptionSchema.index({ source: 1, createdAt: -1 }); // For source filtering with date
+
+// Indexing 
+transcriptionSchema.index({ createdAt: -1 }); 
+transcriptionSchema.index({ audioUrl: 1 }); 
+transcriptionSchema.index({ source: 1, createdAt: -1 }); 
 
 // Static methods
 transcriptionSchema.statics.findRecentTranscriptions = function(days: number = 30, limit: number = 10, offset: number = 0) {

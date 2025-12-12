@@ -64,16 +64,16 @@ workflowSchema.statics.createWorkflow = function(transcriptionId: string) {
 // Instance methods
 workflowSchema.methods.advanceStep = function() {
   if (this.currentStep < this.steps.length - 1) {
-    // Complete current step
+  
     this.steps[this.currentStep].status = 'completed';
     this.steps[this.currentStep].completedAt = new Date();
     
-    // Move to next step
+  
     this.currentStep++;
     this.steps[this.currentStep].status = 'in-progress';
     this.steps[this.currentStep].startedAt = new Date();
     
-    // Check if workflow is complete
+    
     if (this.currentStep === this.steps.length - 1 && 
         this.steps[this.currentStep].status === 'completed') {
       this.status = 'completed';
