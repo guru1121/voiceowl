@@ -192,9 +192,3 @@ Redis-based queues for reliable task processing ny Bull mq
 - **Infrastructure Metrics**: CPU, memory, disk, network usage
 - **Database Metrics**: Connection counts, slow queries, lock waits
 - **Business Metrics**: Transcription success rates, user activity
-
-### Cost Optimization
-- **Auto-scaling**: Scale down during low-traffic periods
-- **Spot Instances**: Use cost-effective compute resources
-- **Storage Tiers**: Different storage classes for different data ages
-- **Caching Efficiency**: Maximize cache hit rates to reduce database load
